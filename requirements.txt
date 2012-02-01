@@ -1,0 +1,1 @@
+svn+http://trac-hacks.org/svn/tracsqlhelperscript/0.12/#egg=tracsqlhelper-dev
