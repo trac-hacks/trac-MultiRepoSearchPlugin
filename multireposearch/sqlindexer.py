@@ -16,10 +16,9 @@ class SqlIndexer(Component):
 
     ## internal methods
     def _last_known_rev(self, reponame):
-        with self.env.db_query as db:        
-            indexed_rev = get_scalar(self.env,
-                                     "SELECT version FROM repository_version WHERE repo=%s",
-                                     0, reponame)
+        indexed_rev = get_scalar(self.env,
+                                 "SELECT version FROM repository_version WHERE repo=%s",
+                                 0, reponame)
         return indexed_rev
 
     def _walk_repo(self, repo, path):
@@ -51,7 +50,9 @@ WHERE %s
 
         if verbose: print "Repo %s DOES need reindexing" % reponame
         mimeview = Mimeview(self.env)
-        with self.env.db_transaction as db:
+
+        @self.env.with_transaction()
+        def do_reindex(db):
             cursor = db.cursor()
 
             for node in self._walk_repo(repo, "/"):
@@ -80,10 +81,10 @@ WHERE repo=%s""", [repo.youngest_rev, reponame])
 
 
     def find_words(self, query):
-        with self.env.db_query as db:
-            sql, args = search_to_sql(db, ['contents'], query)
-            for id, filename, repo in db(self.query % sql, args):
-                yield filename, repo
+        db = self.env.get_read_db()
+        sql, args = search_to_sql(db, ['contents'], query)
+        for id, filename, repo in db(self.query % sql, args):
+            yield filename, repo
 
 
     ### methods for IEnvironmentSetupParticipant    
