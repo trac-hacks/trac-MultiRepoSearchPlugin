@@ -1,0 +1,9 @@
+0.2 (2012-02-13)
+----------------
+
+* Now supports Trac 0.12 as well as 0.13 (http://trac-hacks.org/ticket/9786)
+
+0.1 (2012-02-01)
+----------------
+
+* First release.

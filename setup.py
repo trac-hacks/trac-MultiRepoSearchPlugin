@@ -4,9 +4,13 @@ try:
     long_description = open("README.txt").read()
 except:
     long_description = ''
+try:
+    long_description += open("CHANGES.txt").read()
+except:
+    pass
 
 setup(name='trac-MultiRepoSearchPlugin',
-      version='0.1',
+      version='0.2',
       description="Search the text of source code in your Trac repositories (0.12 and up)",
       long_description=long_description,
       packages=['multireposearch'],
