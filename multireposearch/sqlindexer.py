@@ -83,7 +83,9 @@ WHERE repo=%s""", [repo.youngest_rev, reponame])
     def find_words(self, query):
         db = self.env.get_read_db()
         sql, args = search_to_sql(db, ['contents'], query)
-        for id, filename, repo in db(self.query % sql, args):
+        cursor = db.cursor()
+        cursor.execute(self.query % sql, args)
+        for id, filename, repo in cursor:
             yield filename, repo
 
 
