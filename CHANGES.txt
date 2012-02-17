@@ -3,7 +3,7 @@ Changelog
 =========
 
 0.2.1 (2012-02-17)
-----------------
+------------------
 
 * Supports Trac 0.12 for real this time (http://trac-hacks.org/ticket/9803)
 
