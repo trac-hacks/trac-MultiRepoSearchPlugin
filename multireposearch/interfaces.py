@@ -14,6 +14,8 @@ class IMultiRepoSearchBackend(Interface):
 
     def find_words(query):
         """
-        Yield a series of filenames which match the given query
+        Yield a series of filenames which match the given query.
+
+        A backend is expected to match the query against both file names and file contents.
         """
 
