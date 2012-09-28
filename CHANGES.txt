@@ -7,6 +7,7 @@ Changelog
 
 * Search backends are now expected to match against filenames as well as file contents.
   The provided SQLIndexer component has been updated to search for filenames as well.
+  (http://trac-hacks.org/ticket/10298)
 
 0.2.1 (2012-02-17)
 ------------------
