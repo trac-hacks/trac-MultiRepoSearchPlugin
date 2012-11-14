@@ -139,7 +139,6 @@ WHERE repo=%s""", [repo.youngest_rev, reponame])
             Column('repo'),
             Column('filename'),
             Column('contents'),
-            Index(['contents']),
             ]
         create_table(self.env, repo_cache_table)
 
