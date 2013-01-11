@@ -5,7 +5,7 @@ from trac.search import ISearchSource, shorten_result
 from trac.perm import IPermissionRequestor
 from trac.mimeview.api import Mimeview
 from trac.versioncontrol import RepositoryManager
-from trac.versioncontrol.api import Node, IRepositoryChangeListener
+from trac.versioncontrol.api import Node, IRepositoryChangeListener, NoSuchNode
 
 from multireposearch.interfaces import IMultiRepoSearchBackend
 
