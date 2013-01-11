@@ -86,6 +86,9 @@ class MultiRepoSearchPlugin(Component):
 
         for filename, reponame in self.search_backend.find_words(query):
             repo = self.env.get_repository(reponame=reponame, authname=req.authname)
+            if repo is None:
+                # @@TODO: log it? ask the search backend to remove the reference?
+                continue
             node = repo.get_node(filename)
 
             if node.kind == Node.DIRECTORY:
