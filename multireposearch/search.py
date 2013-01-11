@@ -93,7 +93,11 @@ class MultiRepoSearchPlugin(Component):
             if repo is None:
                 # @@TODO: log it? ask the search backend to remove the reference?
                 continue
-            node = repo.get_node(filename)
+            try:
+                node = repo.get_node(filename)
+            except NoSuchNode, e:
+                # @@TODO: log it!
+                continue
 
             if node.kind == Node.DIRECTORY:
                 yield (self.env.href.browser(reponame, filename),
