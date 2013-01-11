@@ -2,6 +2,14 @@
 Changelog
 =========
 
+0.4 (2013-01-11)
+----------------
+
+ * Errors will no longer occur when repositories or files are removed from the underlying
+   system but still referenced in the search backend's list of search results.
+   (http://trac-hacks.org/ticket/9791, http://trac-hacks.org/ticket/10792, http://trac-hacks.org/ticket/10793)
+ * Removed broken index on text contents for new installations (http://trac-hacks.org/ticket/10619)
+
 0.3 (2012-09-28)
 ----------------
 
