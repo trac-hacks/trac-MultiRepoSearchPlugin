@@ -30,7 +30,13 @@ class MultiRepoSearchPlugin(Component):
 
     ## methods for IRepositoryChangeListener
     def changeset_added(self, repos, changeset):
-        self.search_backend.reindex_repository(repos.reponame)
+        modified = set()
+        removed = set()
+        for path, kind, change, base_path, base_rev in changeset.get_changes():
+            if change in (changeset.ADD, changeset.COPY, changeset.EDIT, changeset.MOVE):
+                modified.add(path)
+
+        self.search_backend.reindex_repository(repos.reponame, modified=list(modified))
 
     def changeset_modified(self, repos, changeset, old_changeset):
         # TODO: not realy sure what to do here but i think we can ignore it,

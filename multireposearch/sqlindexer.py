@@ -40,7 +40,7 @@ WHERE %s
     
     ## methods for IMultiRepoSearchBackend
 
-    def reindex_repository(self, reponame, verbose=False):
+    def reindex_repository(self, reponame, verbose=True, modified=None):
         repo = self.env.get_repository(reponame=reponame)
 
         last_known_rev = self._last_known_rev(reponame)
@@ -55,7 +55,12 @@ WHERE %s
         def do_reindex(db):
             cursor = db.cursor()
 
-            for node in self._walk_repo(repo, "/"):
+            if modified is None:
+                iterator = self._walk_repo(repo, "/")
+            else:
+                iterator = (repo.get_node(path) for path in modified)
+
+            for node in iterator:
                 if verbose: print "Fetching content at %s" % node.path
                 content = node.get_content()
                 if content is None:
