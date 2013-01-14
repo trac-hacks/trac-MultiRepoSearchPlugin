@@ -40,7 +40,7 @@ WHERE %s
     
     ## methods for IMultiRepoSearchBackend
 
-    def reindex_repository(self, reponame, verbose=True, modified=None):
+    def reindex_repository(self, reponame, verbose=False, modified=None):
         repo = self.env.get_repository(reponame=reponame)
 
         last_known_rev = self._last_known_rev(reponame)
