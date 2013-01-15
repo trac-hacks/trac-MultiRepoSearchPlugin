@@ -84,7 +84,7 @@ class MultiRepoSearchPlugin(Component):
     # ISearchSource methods
     def get_search_filters(self, req):
         if req.perm.has_permission('REPO_SEARCH'):
-            yield ('repo', 'Source Repository', 1)
+            yield ('repo', 'Source Repository', 0)
 
     def get_search_results(self, req, query, filters):
         if 'repo' not in filters:
