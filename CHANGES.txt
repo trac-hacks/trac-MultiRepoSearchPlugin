@@ -2,6 +2,16 @@
 Changelog
 =========
 
+0.6 (2013-01-15)
+----------------
+
+* The plugin's search source is now off by default, so Trac searches will not include
+  source code results unless the user explicitly checks the "Source Repository" box
+  on the search form.  This way the plugin won't impact performance of searches unless
+  the user actually wants to search through source code.  (This behavior may change 
+  in the future, but not until there exists a search backend that's faster than unindexed
+  full text search on a database column.)
+
 0.5 (2013-01-15)
 ----------------
 

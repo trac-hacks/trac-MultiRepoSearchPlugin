@@ -10,7 +10,7 @@ except:
     pass
 
 setup(name='trac-MultiRepoSearchPlugin',
-      version='0.5',
+      version='0.6',
       description="Search the text of source code in your Trac repositories (0.12 and up)",
       long_description=long_description,
       packages=['multireposearch'],
