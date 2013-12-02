@@ -40,15 +40,15 @@ WHERE %s
     
     ## methods for IMultiRepoSearchBackend
 
-    def reindex_repository(self, reponame, verbose=False, modified=None):
+    def reindex_repository(self, reponame, modified=None):
         repo = self.env.get_repository(reponame=reponame)
 
         last_known_rev = self._last_known_rev(reponame)
         if last_known_rev is not None and last_known_rev == repo.youngest_rev:
-            if verbose: print "Repo %s doesn't need reindexing" % reponame
+            self.log.debug("Repo %s doesn't need reindexing" % reponame)
             return
 
-        if verbose: print "Repo %s DOES need reindexing" % reponame
+        self.log.debug("Repo %s DOES need reindexing" % reponame)
         mimeview = Mimeview(self.env)
 
         @self.env.with_transaction()
@@ -61,7 +61,7 @@ WHERE %s
                 iterator = (repo.get_node(path) for path in modified)
 
             for node in iterator:
-                if verbose: print "Fetching content at %s" % node.path
+                self.log.debug("Fetching content at %s" % node.path)
                 content = node.get_content()
                 if content is None:
                     continue

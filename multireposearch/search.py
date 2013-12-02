@@ -23,10 +23,10 @@ class MultiRepoSearchPlugin(Component):
         "Name of the component implementing `IMultiRepoSearchBackend`, "
         "which implements repository indexing and search strategies.")
 
-    def reindex_all(self, verbose=False):
+    def reindex_all(self):
         repos = RepositoryManager(self.env).get_all_repositories()
         for reponame in repos:
-            self.search_backend.reindex_repository(reponame, verbose=verbose)
+            self.search_backend.reindex_repository(reponame)
 
     ## methods for IRepositoryChangeListener
     def changeset_added(self, repos, changeset):
@@ -70,10 +70,10 @@ class MultiRepoSearchPlugin(Component):
         return [
             ('multireposearch reindex_all', '', 'reindex all known repositories', 
              None,
-             lambda: self.reindex_all(verbose=True)),
+             lambda: self.reindex_all()),
             ('multireposearch reindex', 'reponame', 'reindex a single repository', 
              None, 
-             lambda reponame: self.search_backend.reindex_repository(reponame, verbose=True)),
+             lambda reponame: self.search_backend.reindex_repository(reponame)),
             ]
     
 
