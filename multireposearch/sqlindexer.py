@@ -4,6 +4,7 @@ from trac.db import Table, Column, Index, DatabaseManager
 from trac.env import IEnvironmentSetupParticipant
 from trac.mimeview.api import Mimeview
 from trac.search.api import search_to_sql
+from trac.versioncontrol import RepositoryManager
 from trac.versioncontrol.api import Node
 
 from tracsqlhelper import get_scalar, execute_non_query, create_table
@@ -41,7 +42,7 @@ WHERE %s
     ## methods for IMultiRepoSearchBackend
 
     def reindex_repository(self, reponame, modified=None):
-        repo = self.env.get_repository(reponame=reponame)
+        repo = RepositoryManager(self.env).get_repository(reponame)
 
         last_known_rev = self._last_known_rev(reponame)
         if last_known_rev is not None and last_known_rev == repo.youngest_rev:
@@ -51,8 +52,7 @@ WHERE %s
         self.log.debug("Repo %s DOES need reindexing" % reponame)
         mimeview = Mimeview(self.env)
 
-        @self.env.with_transaction()
-        def do_reindex(db):
+        with self.env.db_transaction as db:
             cursor = db.cursor()
 
             if modified is None:
@@ -86,12 +86,10 @@ WHERE repo=%s""", [repo.youngest_rev, reponame])
 
 
     def find_words(self, query):
-        db = self.env.get_read_db()
-        sql, args = search_to_sql(db, ['filename', 'contents'], query)
-        cursor = db.cursor()
-        cursor.execute(self.query % sql, args)
-        for id, filename, repo in cursor:
-            yield filename, repo
+        with self.env.db_query as db:
+            sql, args = search_to_sql(db, ['filename', 'contents'], query)
+            for id, filename, repo in db(self.query % sql, args):
+                yield filename, repo
 
 
     ### methods for IEnvironmentSetupParticipant    
@@ -101,10 +99,10 @@ WHERE repo=%s""", [repo.youngest_rev, reponame])
     
     def environment_created(self):
         """Called when a new Trac environment is created."""
-        if self.environment_needs_upgrade(None):
-            self.upgrade_environment(None)
+        if self.environment_needs_upgrade():
+            self.upgrade_environment()
     
-    def environment_needs_upgrade(self, db):
+    def environment_needs_upgrade(self):
         """Called when Trac checks whether the environment needs to be upgraded.
         
         Should return `True` if this participant needs an upgrade to be
@@ -112,14 +110,14 @@ WHERE repo=%s""", [repo.youngest_rev, reponame])
         """
         return not self.version()
 
-    def upgrade_environment(self, db):
+    def upgrade_environment(self):
         """Actually perform an environment upgrade.
         
         Implementations of this method should not commit any database
         transactions. This is done implicitly after all participants have
         performed the upgrades they need without an error being raised.
         """
-        if not self.environment_needs_upgrade(db):
+        if not self.environment_needs_upgrade():
             return
 
         version = self.version()
@@ -159,6 +157,6 @@ WHERE repo=%s""", [repo.youngest_rev, reponame])
     # ordered steps for upgrading
     steps = [ 
         [ create_db ],
-        ]
+    ]
 
 

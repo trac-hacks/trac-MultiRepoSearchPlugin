@@ -90,11 +90,13 @@ class MultiRepoSearchPlugin(Component):
         if 'repo' not in filters:
             return
 
+        repo_man = RepositoryManager(self.env)
         for filename, reponame in self.search_backend.find_words(query):
             try:
-                repo = self.env.get_repository(reponame=reponame, authname=req.authname)
+                repo = repo_man.get_repository(reponame=reponame)
             except Exception, e:
                 # @@TODO: log it!
+                raise
                 continue
             if repo is None:
                 # @@TODO: log it? ask the search backend to remove the reference?
