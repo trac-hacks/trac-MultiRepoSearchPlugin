@@ -65,7 +65,13 @@ WHERE %s
                 content = node.get_content()
                 if content is None:
                     continue
-                content = mimeview.to_unicode(content.read(), node.get_content_type())
+                content = content.read()
+                content_type = node.get_content_type()
+                if mimeview.is_binary(content=content, mimetype=content_type):
+                    continue
+                content = mimeview.to_unicode(
+                    content, node.get_content_type()
+                ).encode("utf-8")
 
                 cursor.execute("""
 DELETE FROM repository_node
